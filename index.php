@@ -13,7 +13,7 @@
 <body>
     <style>
         .crop {
-            height: 88vh;
+            height: 90vh;
             overflow: hidden;
         }
 
