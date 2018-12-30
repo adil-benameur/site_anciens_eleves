@@ -33,16 +33,16 @@
 
         <div class="carousel-inner" role="listbox">
             <div class="carousel-item active crop">
-                <img src="http://www.aaecl.com/www/fckuploads/image/LPA_decembre2009.jpg" class="img-fluid" alt="">
+                <img src="images/carousel_1.jpg" class="img-fluid" alt="">
                 <div class="carousel-caption">
                     <h1>Bienvenue sur le site des anciens élèves du lycée Pierre d'Ailly</h1>
                 </div>
             </div>
             <div class="carousel-item crop">
-                <img src="http://www.aaecl.com/www/fckuploads/image/IMGP0007.JPG" class="img-fluid" alt="">
+                <img src="images/carousel_2.jpg" class="img-fluid" alt="">
             </div>
             <div class="carousel-item crop">
-                <img src="assets/img/entrée_lycée.jpg" class="img-fluid" alt="">
+                <img src="images/carousel_3.jpg" class="img-fluid" alt="">
             </div>
         </div>
 
