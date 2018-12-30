@@ -1,0 +1,9 @@
+{
+    "version": 2,
+    "name" : "asso",
+    "builds": [
+        { "src": "*.php", "use": "@now/php", "config": { "maxLambdaSize": "15mb" } },
+        { "src": "images/*", "use": "@now/static"}
+    ],
+    "regions" : ["bru1"]
+}
