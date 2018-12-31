@@ -1,5 +1,7 @@
 <?php
     include("mysql.php");
+    $mysqli->real_query("SELECT id_eleve, nom, prenom, qui FROM eleves");
+    $res = $mysqli->use_result();
 ?>
 
 <!DOCTYPE html>
