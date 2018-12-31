@@ -1,10 +1,5 @@
 <?php
-    preg_match("/profils\/([^\/]*|\G)\/([^\/]*|\G)/",$_SERVER['REQUEST_URI'],$matches);
-    // last part of the url : $matches[1];
-    $mysqli = mysqli_connect("127.0.0.1", "asso", "asso", "site_anciens_eleves");
-    $mysqli->real_query("SELECT id_eleve, nom, prenom, qui, parcours, email FROM eleves WHERE id_eleve = \"". $matches[1] ."\"");
-    $res = $mysqli->use_result();
-    $row = $res->fetch_assoc();
+    include("mysql_profil.php");
 ?>
 
 <!DOCTYPE html>

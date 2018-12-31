@@ -1,7 +1,5 @@
 <?php
-    $mysqli = mysqli_connect("127.0.0.1", "asso", "asso", "site_anciens_eleves");
-    $mysqli->real_query("SELECT id_eleve, nom, prenom, qui FROM eleves");
-    $res = $mysqli->use_result();
+    include("mysql.php");
 ?>
 
 <!DOCTYPE html>
