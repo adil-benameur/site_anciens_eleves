@@ -151,7 +151,7 @@
 
 
 <?php
-#    foreach (get_defined_vars() as $key => $value) {
-#        echo "<p>" . $key . " => " . var_export($value) . "</p>" . "<br>";
-#    }
+    foreach (get_defined_vars() as $key => $value) {
+        echo "<p>" . $key . " => " . var_export($value) . "</p>" . "<br>";
+    }
 ?>
