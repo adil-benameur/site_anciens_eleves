@@ -1,7 +1,6 @@
 <?php
     include("mysql.php");
-    $mysqli->real_query("SELECT id_eleve, nom, prenom, qui FROM eleves");
-    $res = $mysqli->use_result();
+    $row = mysqli_fetch_array(mysqli_query($mysqli, "SELECT id_eleve, nom, prenom, qui FROM eleves"));
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +27,7 @@
 
     <div class="container" style="margin-top: 20px">
         <div class="card-columns">
-            <?php while ($row = $res->fetch_assoc()) { ?>
+            <?php while ($row != NULL) { ?>
             <a href="/profil.php?id_eleve=<?php echo $row['id_eleve']; ?>&page=qui_suis_je" class="link">
                 <div class="card">
                     <img class="card-img-top" src="/images/profils/<?php echo $row['id_eleve']; ?>.jpg" alt="Card image cap">
@@ -38,6 +37,9 @@
                     </div>
                 </div>
             </a>
+            <?php } ?>
+            <?php if ($row == NULL){?>
+                <h2>Pas d'élèves enregistrés...</h2>
             <?php } ?>
         </div>
     </div>
