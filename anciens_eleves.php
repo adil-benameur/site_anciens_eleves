@@ -1,6 +1,7 @@
 <?php
     include("mysql.php");
-    $row = mysqli_fetch_array(mysqli_query($mysqli, "SELECT id_eleve, nom, prenom, qui FROM eleves"));
+    $mysqli->real_query("SELECT id_eleve, nom, prenom, qui, image_profil FROM eleves");
+    $res = $mysqli->use_result();
 ?>
 
 <!DOCTYPE html>
@@ -27,19 +28,16 @@
 
     <div class="container" style="margin-top: 20px">
         <div class="card-columns">
-            <?php while ($row != NULL) { ?>
+            <?php while ($row = $res->fetch_assoc()) { ?>
             <a href="/profil.php?id_eleve=<?php echo $row['id_eleve']; ?>&page=qui_suis_je" class="link">
                 <div class="card">
-                    <img class="card-img-top" src="/images/profils/<?php echo $row['id_eleve']; ?>.jpg" alt="Card image cap">
+                    <img class="card-img-top" src="/images/profils/<?php echo $row['image_profil']; ?>" alt="Profil de <?php echo $row['prenom'] . " " . $row['nom'] ?>">
                     <div class="card-body">
                         <h5 class="card-title"><?php echo $row['prenom'] . " " .  $row['nom']; ?></h5>
                         <p class="card-text"><?php echo substr($row['qui'], 0, 200). "...";?></p>
                     </div>
                 </div>
             </a>
-            <?php } ?>
-            <?php if ($row == NULL){?>
-                <h2>Pas d'élèves enregistrés...</h2>
             <?php } ?>
         </div>
     </div>

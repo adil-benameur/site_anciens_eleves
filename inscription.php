@@ -1,12 +1,10 @@
 <?php
     include("mysql.php");
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $post = True;
         $email = htmlspecialchars($_POST["email"]);
         $row = mysqli_fetch_array(mysqli_query($mysqli, "SELECT email FROM eleves WHERE email = \"" . $email . "\";"));
         if ($row["email"] == $email) {
             $email_exit = True;
-            mysqli_close($mysqli);
         }
         else {
             $nom = ucwords(htmlspecialchars($_POST["nom"]));
@@ -15,15 +13,18 @@
             $qui = htmlspecialchars($_POST["qui"]);
             $parcours = htmlspecialchars($_POST["parcours"]);
             $image_profil = htmlspecialchars($_FILES["avatar"]["name"]) ?: "default_profil.png";
-            
+            mysqli_query($mysqli, "INSERT INTO eleves (nom, prenom, email, password, qui, parcours) VALUES (\"". $nom ."\",\"". $prenom ."\",\"". $email ."\",\"". $password ."\",\"". $qui ."\",\"". $parcours ."\");");
             $row = mysqli_fetch_array(mysqli_query($mysqli,"SELECT id_eleve FROM eleves WHERE email = \"" . $email . "\";"));
-            if (isset($_FILES['avatar'])) {
+            if ($_FILES['avatar']["error"] == 0 and $row != NULL) {
                 # Image profil
                 move_uploaded_file($_FILES['avatar']['tmp_name'], 'images/profils/' . $row["id_eleve"] . "." . pathinfo($_FILES['avatar']['name'])['extension']);
+                mysqli_query($mysqli, "UPDATE eleves SET image_profil = \"" . $row["id_eleve"] . "." . pathinfo($_FILES['avatar']['name'])['extension'] . "\" WHERE id_eleve = " . $row["id_eleve"]);
             }
-            mysqli_query($mysqli, "INSERT INTO eleves (nom, prenom, email, password, qui, parcours, image_profil) VALUES(\"". $nom ."\",\"". $prenom ."\",\"". $email ."\",\"". $password ."\",\"". $qui ."\",\"". $parcours ."\"," . $image_profil . "\");");
+            else {
+                mysqli_query($mysqli, "UPDATE eleves SET image_profil = \"default_profil.jpg\" WHERE id_eleve = " . $row["id_eleve"]);
+            }
             mysqli_close($mysqli);
-            header("Location : https://asso-lpa.tk/profil.php?id_eleve=" . $row["id_eleve"] . "&page=qui_suis_je");
+            header("location:https://asso-lpa.tk/profil.php?id_eleve=" . $row["id_eleve"] . "&page=qui_suis_je");
         }
     }
 ?>
@@ -66,7 +67,9 @@
     <?php if(isset($email_exit)) {?>
     <div class="container alert alert-danger alert-dismissible fade show" style="margin-top: 20px;" role="alert">
         <strong>Erreur :</strong> cette adresse email est déjà utilisée (
-        <?php echo $email ?>)
+        <?php echo $email;
+        #####      mysqli_close($mysqli);
+        ?>)
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -152,7 +155,7 @@
 
 
 <?php
-#    foreach (get_defined_vars() as $key => $value) {
-#        echo "<p>" . $key . " => " . var_export($value) . "</p>" . "<br>";
-#    }
+    foreach (get_defined_vars() as $key => $value) {
+        echo "<p>" . $key . " => " . var_export($value) . "</p>" . "<br>";
+    }
 ?>

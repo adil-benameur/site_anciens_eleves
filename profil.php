@@ -27,7 +27,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12 col-md-4 col-lg-3 col-xs-12 border-right" style="padding-left:0px;padding-right:0px;margin:0px;height:90.63vh;width:0px;max-width:300px;background-color:rgb(247,247,247);">
-                <img src="images/profils/<?php echo $row["image_profil"]?>" class="img-fluid" style="margin:0px;max-width:auto;min-width:auto;padding:15px;">
+                <img src="images/profils/<?php echo $row["image_profil"]?>" class="img-fluid" style="margin:0px;max-width:auto;min-width:auto;padding:15px;width: 100%;">
                 <ul class="list-group">
                     <li class="list-group-item" style="background-color:rgb(247,247,247);width:auto;border:0px solid;font-size:auto;height:auto;"><a
                             href="/profil.php?id_eleve=<?php echo $_GET["id_eleve"]; ?>&page=qui_suis_je" style="margin-left:0px;font-size:25px;margin-right:0px;color:rgb(33,37,41);">Qui
