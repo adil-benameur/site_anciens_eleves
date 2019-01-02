@@ -1,9 +1,12 @@
 <?php
     include("mysql.php");
-    preg_match("/profils\/([^\/]*|\G)\/([^\/]*|\G)/",$_SERVER['REQUEST_URI'],$matches);
-    $mysqli->real_query("SELECT id_eleve, nom, prenom, qui, parcours, email FROM eleves WHERE id_eleve = \"". $matches[1] ."\"");
-    $res = $mysqli->use_result();
-    $row = $res->fetch_assoc();
+    $row = mysqli_fetch_array(mysqli_query($mysqli, "SELECT nom, prenom, qui, parcours, email, image_profil FROM eleves WHERE id_eleve = \"". $_GET["id_eleve"] ."\""));
+    if (isset($row) == False) {
+        header("Location: http://asso-lpa.tk/anciens_eleves.php");
+    }
+    if (in_array($_GET["page"], ["qui_suis_je", "mon_parcours", "me_contacter"]) == False) {
+        header("Location: http://asso-lpa.tk/profil?id_eleve=". $_GET["id_eleve"] . "page=qui_suis_je");
+    }
 ?>
 
 <!DOCTYPE html>
@@ -13,6 +16,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile de <?php echo $row['prenom'] . " " .  $row['nom']; ?></title>
+    <link rel="icon" href="images/LPA_logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee">
 </head>
@@ -22,30 +26,32 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-12 col-md-4 col-lg-3 border-right col-xs-12" style="padding-left:0px;padding-right:0px;background-color:#f7f7f7;margin:0px;height:90.63vh;width:0px;max-width:300px;"><img
-                    src="/images/<?php echo $row["id_eleve"] ?>.jpg" class="img-fluid" style="margin:0px;max-width:auto;min-width:auto;padding:15px;">
+            <div class="col-12 col-md-4 col-lg-3 col-xs-12 border-right" style="padding-left:0px;padding-right:0px;margin:0px;height:90.63vh;width:0px;max-width:300px;background-color:rgb(247,247,247);">
+                <img src="images/profils/<?php echo $row["image_profil"]?>" class="img-fluid" style="margin:0px;max-width:auto;min-width:auto;padding:15px;">
                 <ul class="list-group">
                     <li class="list-group-item" style="background-color:rgb(247,247,247);width:auto;border:0px solid;font-size:auto;height:auto;"><a
-                            href="./qui_suis_je" style="margin-left:0px;font-size:25px;margin-right:0px;color:rgb(33,37,41);">Qui
+                            href="/profil.php?id_eleve=<?php echo $_GET["id_eleve"]; ?>&page=qui_suis_je" style="margin-left:0px;font-size:25px;margin-right:0px;color:rgb(33,37,41);">Qui
                             suis-je ?</a></li>
                     <li class="list-group-item" style="background-color:rgb(247,247,247);border:0px solid;font-size:auto;"><a
-                            href="./mon_parcours" style="margin-left:0px;font-size:25px;margin-right:0px;padding-right:0px;color:rgb(33,37,41);">Mon
+                            href="/profil.php?id_eleve=<?php echo $_GET["id_eleve"]; ?>&page=mon_parcours" style="margin-left:0px;font-size:25px;margin-right:0px;padding-right:0px;color:rgb(33,37,41);">Mon
                             parcours</a></li>
                     <li class="list-group-item" style="background-color:rgb(247,247,247);width:auto;border:0px solid;font-size:auto;"><a
-                            href="./me_contacter" style="margin-left:0px;font-size:25px;color:rgb(33,37,41);">Me contacter</a></li>
+                            href="/profil.php?id_eleve=<?php echo $_GET["id_eleve"]; ?>&page=me_contacter" style="margin-left:0px;font-size:25px;color:rgb(33,37,41);">Me contacter</a></li>
                 </ul>
                 <h4 style="margin-left:20px;"></h4>
             </div>
+
             <div class="col-md-8 col-lg-9">
                 <h2 style="margin-top:6px;"><?php echo $row["prenom"] . " " . $row["nom"]; ?></h2>
                 <h4><?php 
-                if($matches[2] == "qui_suis_je"){
+                $page = $_GET["page"];
+                if($page == "qui_suis_je"){
                     echo "Qui suis-je ?";
                     $content = "qui";
-                }elseif ($matches[2] == "mon_parcours"){
+                }elseif ($page == "mon_parcours"){
                     echo "Mon parcours";
                     $content = "parcours";
-                }elseif ($matches[2] == "me_contacter"){
+                }elseif ($page == "me_contacter"){
                     echo "Me contacter";
                     $content = "email";
                 }?></h4>

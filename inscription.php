@@ -8,18 +8,20 @@
             $email_exit = True;
         }
         else {
+            $nom = ucwords(htmlspecialchars($_POST["nom"]));
+            $prenom = ucwords(htmlspecialchars($_POST["prenom"]));
             $password = htmlspecialchars($_POST["password"]);
-            $prenom = htmlspecialchars($_POST["prenom"]);
             $qui = htmlspecialchars($_POST["qui"]);
             $parcours = htmlspecialchars($_POST["parcours"]);
-            $nom = htmlspecialchars($_POST["nom"]);
-            mysqli_query($mysqli, "INSERT INTO eleves (nom, prenom, email, password, qui, parcours) VALUES(\"". $nom ."\",\"". $prenom ."\",\"". $email ."\",\"". $password ."\",\"". $qui ."\",\"". $parcours ."\");");
+            $image_profil = htmlspecialchars($_FILES["avatar"]["name"]) ?: "default_profil.png";
+            
+            $row = mysqli_fetch_array(mysqli_query($mysqli,"SELECT id_eleve FROM eleves WHERE email = \"" . $email . "\";"));
             if (isset($_FILES['avatar'])) {
                 # Image profil
-                $row = mysqli_fetch_array(mysqli_query($mysqli,"SELECT id_eleve FROM eleves WHERE email = \"" . $email . "\";"));
-                error_log($row["id_eleve"], $message_type=0);
-                move_uploaded_file($_FILES['avatar']['tmp_name'], 'uploads/' . $row["id_eleve"] . pathinfo($_FILES['avatar']['name'])['extension']);
+                move_uploaded_file($_FILES['avatar']['tmp_name'], 'images/profils/' . $row["id_eleve"] . "." . pathinfo($_FILES['avatar']['name'])['extension']);
             }
+            header("Location : https://asso-lpa.tk/profil?id_eleve=" . $row["id_eleve"] . "&page=qui_suis_je");
+            mysqli_query($mysqli, "INSERT INTO eleves (nom, prenom, email, password, qui, parcours, image_profil) VALUES(\"". $nom ."\",\"". $prenom ."\",\"". $email ."\",\"". $password ."\",\"". $qui ."\",\"". $parcours ."\"," . $image_profil . "\");");
         }
         mysqli_close($mysqli);
     }
@@ -31,6 +33,7 @@
 <head>
     <meta charset="utf-8" />
     <title>Inscrivez-vous dans le registre</title>
+    <link rel="icon" href="images/LPA_logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
 </head>
 
@@ -59,14 +62,25 @@
 
     <?php include("menu.html"); ?>
 
+    <?php if(isset($email_exit)) {?>
+    <div class="container alert alert-danger alert-dismissible fade show" style="margin-top: 20px;" role="alert">
+        <strong>Erreur :</strong> cette adresse email est déjà utilisée (
+        <?php echo $email ?>)
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <?php } ?>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <div class="container-fluid" style="margin-top:20px;">
         <div id="kv-avatar-errors-2" class="center-block" style="width:800px;display:none"></div>
-        <form class="form form-vertical" action="/inscription.php" method="post" enctype="multipart/form-data">
+        <form class="form form-vertical" action="/inscription.php" method="post" enctype="multipart/form-data" runat="server">
             <div class="row">
                 <div class="col-sm-4 text-center">
                     <div class="kv-avatar">
                         <div class="file-loading">
-                            <input id="avatar-2" name="avatar" type="file">
+                            <img id="default" src="images/profils/default_profil.png" alt="Votre image de profil" class="rounded" style="max-height: 75vh; max-width: 27vw; margin-top: 9px;" />
+                            <input id="imgpreview" name="avatar" type="file" style="margin-top: 20px;" size="2000000" accept="image/*">
                         </div>
                     </div>
                 </div>
@@ -88,13 +102,13 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="nom">Nom</label>
+                                <label for="nom">Nom<span class="kv-reqd">*</span></label>
                                 <input type="text" class="form-control" name="nom" required>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="prenom">Prénom</label>
+                                <label for="prenom">Prénom<span class="kv-reqd">*</span></label>
                                 <input type="text" class="form-control" name="prenom" required>
                             </div>
                         </div>
@@ -102,16 +116,16 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-group">
-                                <label for="qui">Qui suis-je ?</label>
-                                <textarea class="form-control" rows="5" name="qui"></textarea>
+                                <label for="qui">Qui suis-je ?<span class="kv-reqd">*</span></label>
+                                <textarea class="form-control" rows="5" name="qui">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu malesuada ligula. Suspendisse eros nisl, tincidunt vitae ultrices sit amet, pulvinar vitae justo. Maecenas finibus lorem consectetur tortor facilisis, eu volutpat lacus malesuada. Fusce sed leo quis sem porta accumsan. Curabitur et feugiat sem. Aenean vitae faucibus magna. Nullam vel tellus in lacus tristique tincidunt non sed tortor. Nunc a volutpat justo, pretium cursus mauris. In eget nibh arcu. Sed mattis, nulla nec vestibulum efficitur, magna turpis ultrices nisl, ut ultricies nisl purus id est. Donec non purus augue. Vivamus et tincidunt sapien. Donec sed lobortis metus. Praesent et ultrices urna. Quisque mauris enim, sagittis in sodales et, efficitur id nunc.</textarea>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
                             <div class="form-group">
-                                <label for="parcours">Mon parcours</label>
-                                <textarea class="form-control" rows="5" name="parcours"></textarea>
+                                <label for="parcours">Mon parcours<span class="kv-reqd">*</span></label>
+                                <textarea class="form-control" rows="5" name="parcours">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu malesuada ligula. Suspendisse eros nisl, tincidunt vitae ultrices sit amet, pulvinar vitae justo. Maecenas finibus lorem consectetur tortor facilisis, eu volutpat lacus malesuada. Fusce sed leo quis sem porta accumsan. Curabitur et feugiat sem. Aenean vitae faucibus magna. Nullam vel tellus in lacus tristique tincidunt non sed tortor. Nunc a volutpat justo, pretium cursus mauris. In eget nibh arcu. Sed mattis, nulla nec vestibulum efficitur, magna turpis ultrices nisl, ut ultricies nisl purus id est. Donec non purus augue. Vivamus et tincidunt sapien. Donec sed lobortis metus. Praesent et ultrices urna. Quisque mauris enim, sagittis in sodales et, efficitur id nunc.</textarea>
                             </div>
                         </div>
                     </div>
@@ -125,36 +139,19 @@
         </form>
     </div>
 
-
-    <script>
-        var btnCust = '<button type="button" class="btn btn-secondary" title="Add picture tags" ' +
-            'onclick="alert(\'Call your custom code here.\')">' +
-            '<i class="glyphicon glyphicon-tag"></i>' +
-            '</button>';
-        $("#avatar-2").fileinput({
-            overwriteInitial: True,
-            maxFileSize: 1500,
-            showClose: false,
-            showCaption: false,
-            showBrowse: false,
-            browseOnZoneClick: True,
-            removeLabel: '',
-            removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
-            removeTitle: 'Cancel or reset changes',
-            elErrorContainer: '#kv-avatar-errors-2',
-            msgErrorClass: 'alert alert-block alert-danger',
-            defaultPreviewContent: '<img src="images/default_profil.jpg" alt="Votre avatar"><h6 class="text-muted">Click to select</h6>',
-            layoutTemplates: {
-                main2: '{preview} ' + btnCust + ' {remove} {browse}'
-            },
-            allowedFileExtensions: ["jpg", "png", "gif"]
-        });
-    </script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
+    <script src="js/image_preview.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-        crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-        crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script>
+
 </body>
+
 </html>
+
+
+<?php
+#    foreach (get_defined_vars() as $key => $value) {
+#        echo "<p>" . $key . " => " . var_export($value) . "</p>" . "<br>";
+#    }
+?>

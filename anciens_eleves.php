@@ -11,6 +11,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Anciens élèves</title>
+    <link rel="icon" href="images/LPA_logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
 </head>
 
@@ -28,9 +29,9 @@
     <div class="container" style="margin-top: 20px">
         <div class="card-columns">
             <?php while ($row = $res->fetch_assoc()) { ?>
-            <a href="/profils/<?php echo $row['id_eleve']; ?>" class="link">
+            <a href="/profil.php?id_eleve=<?php echo $row['id_eleve']; ?>&page=qui_suis_je" class="link">
                 <div class="card">
-                    <img class="card-img-top" src="/images/<?php echo $row['id_eleve']; ?>.jpg" alt="Card image cap">
+                    <img class="card-img-top" src="/images/profils/<?php echo $row['id_eleve']; ?>.jpg" alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title"><?php echo $row['prenom'] . " " .  $row['nom']; ?></h5>
                         <p class="card-text"><?php echo substr($row['qui'], 0, 200). "...";?></p>
