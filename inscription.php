@@ -20,7 +20,7 @@
                 # Image profil
                 move_uploaded_file($_FILES['avatar']['tmp_name'], 'images/profils/' . $row["id_eleve"] . "." . pathinfo($_FILES['avatar']['name'])['extension']);
             }
-            header("Location : https://asso-lpa.tk/profil?id_eleve=" . $row["id_eleve"] . "&page=qui_suis_je");
+            header("Location : https://asso-lpa.tk/profil.php?id_eleve=" . $row["id_eleve"] . "&page=qui_suis_je");
             mysqli_query($mysqli, "INSERT INTO eleves (nom, prenom, email, password, qui, parcours, image_profil) VALUES(\"". $nom ."\",\"". $prenom ."\",\"". $email ."\",\"". $password ."\",\"". $qui ."\",\"". $parcours ."\"," . $image_profil . "\");");
         }
         mysqli_close($mysqli);
