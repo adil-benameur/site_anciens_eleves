@@ -6,6 +6,7 @@
         $row = mysqli_fetch_array(mysqli_query($mysqli, "SELECT email FROM eleves WHERE email = \"" . $email . "\";"));
         if ($row["email"] == $email) {
             $email_exit = True;
+            mysqli_close($mysqli);
         }
         else {
             $nom = ucwords(htmlspecialchars($_POST["nom"]));
@@ -20,10 +21,10 @@
                 # Image profil
                 move_uploaded_file($_FILES['avatar']['tmp_name'], 'images/profils/' . $row["id_eleve"] . "." . pathinfo($_FILES['avatar']['name'])['extension']);
             }
-            header("Location : https://asso-lpa.tk/profil.php?id_eleve=" . $row["id_eleve"] . "&page=qui_suis_je");
             mysqli_query($mysqli, "INSERT INTO eleves (nom, prenom, email, password, qui, parcours, image_profil) VALUES(\"". $nom ."\",\"". $prenom ."\",\"". $email ."\",\"". $password ."\",\"". $qui ."\",\"". $parcours ."\"," . $image_profil . "\");");
+            mysqli_close($mysqli);
+            header("Location : https://asso-lpa.tk/profil.php?id_eleve=" . $row["id_eleve"] . "&page=qui_suis_je");
         }
-        mysqli_close($mysqli);
     }
 ?>
 
@@ -151,7 +152,7 @@
 
 
 <?php
-    foreach (get_defined_vars() as $key => $value) {
-        echo "<p>" . $key . " => " . var_export($value) . "</p>" . "<br>";
-    }
+#    foreach (get_defined_vars() as $key => $value) {
+#        echo "<p>" . $key . " => " . var_export($value) . "</p>" . "<br>";
+#    }
 ?>
