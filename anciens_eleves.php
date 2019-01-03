@@ -26,7 +26,7 @@
         }
     </style>
 
-    <div class="container" style="margin-top: 20px">
+    <div class="container" style="margin-top: 30px">
         <div class="card-columns">
             <?php while ($row = $res->fetch_assoc()) { ?>
             <a href="/profil.php?id_eleve=<?php echo $row['id_eleve']; ?>&page=qui_suis_je" class="link">
