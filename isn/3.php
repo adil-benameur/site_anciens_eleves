@@ -6,7 +6,7 @@
 <body>
     <thead>
         <tr>
-            <th colspan="2">Envoie et récupération de données</th>
+            <th>Envoie et récupération de données</th>
         </tr>
     </thead>
     <form action="/isn/3.php" method="post" enctype="multipart/form-data">
